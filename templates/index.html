@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.amber.min.css">
+  <title>Pantry</title>
+</head>
+<body>
+  <header class="container">
+    <hgroup>
+      <h1>Pantry Tracker</h1>
+      <p>The perfect place to keep your goods in place!</p>
+    </hgroup>
+  </header>
+  <main class="container overflow-auto">
+    {% if not pantry.table %}
+    <h1>Start adding ingredients to track your pantry!</h1>
+    <form action="/add" method="post">
+      <fieldset>
+        <label>
+          Item Name
+          <input type="text" name="name" placeholder="Banana">
+        </label>
+        <label for="">Item Category</label>
+        <select name="category">
+          <option value="" selected disabled>Pick an Item Category...</option>
+          <option value="baking-ingredients">Baking Ingredients</option>
+          <option value="beverages">Beverages</option>
+          <option value="breakfast-items">Breakfast Items</option>
+          <option value="canned-goods">Canned Goods</option>
+          <option value="condiments">Condiments</option>
+          <option value="dairy">Dairy</option>
+          <option value="dried-fruits">Dried Fruits</option>
+          <option value="frozen-fruits">Frozen Fruits</option>
+          <option value="frozen-vegetables">Frozen Vegetables</option>
+          <option value="fresh-fruits">Fresh Fruits</option>
+          <option value="fresh-vegetables">Fresh Vegetables</option>
+          <option value="grains">Grains</option>
+          <option value="legumes">Legumes</option>
+          <option value="meat-poultry">Meat & Poultry</option>
+          <option value="miscellaneous">Miscellaneous</option>
+          <option value="nuts-seeds">Nuts & Seeds</option>
+          <option value="oils-vinegars">Oils & Vinegars</option>
+          <option value="pasta">Pasta</option>
+          <option value="prepared-meals">Prepared Meals</option>
+          <option value="sauces">Sauces</option>
+          <option value="seafood">Seafood</option>
+          <option value="snacks">Snacks</option>
+          <option value="soups">Soups</option>
+          <option value="spices-herbs">Spices & Herbs</option>
+          <option value="specialty-items">Specialty Items</option>
+          <option value="sweeteners">Sweeteners</option>
+        </select>
+      </fieldset>
+      <input type="submit" value="Add!"/>
+    </form>
+    {% else %}
+    <div class="overflow-auto">
+      <table class="striped">
+        <thead>
+          <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Count</th>
+            <th scope="col">Add</th>
+            <th scope="col">Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item, count in pantry.table.items() %}
+          <tr>
+            <th scope="row">{{ item.name }}</th>
+            <td>{{ item.type }}</td>
+            <td>{{ count }}</td>
+            <td>
+              <button 
+              onclick="addItem('{{ item.name }}', '{{ item.type }}')"
+              >
+              +
+              </button>
+            </td>
+            <td>
+              <button 
+              class="contrast" 
+              onclick="deleteItem('{{ item.name }}', '{{ item.type }}')"
+              >
+              -
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <article>
+      <h1>Add a new item</h1>
+      <form action="/add" method="post">
+        <fieldset>
+          <label>
+            Item Name
+            <input type="text" name="name" placeholder="Banana">
+          </label>
+          <label for="">Item Category</label>
+          <select name="category">
+            <option value="" selected disabled>Pick an Item Category...</option>
+            <option value="baking-ingredients">Baking Ingredients</option>
+            <option value="beverages">Beverages</option>
+            <option value="breakfast-items">Breakfast Items</option>
+            <option value="canned-goods">Canned Goods</option>
+            <option value="condiments">Condiments</option>
+            <option value="dairy">Dairy</option>
+            <option value="dried-fruits">Dried Fruits</option>
+            <option value="frozen-fruits">Frozen Fruits</option>
+            <option value="frozen-vegetables">Frozen Vegetables</option>
+            <option value="fresh-fruits">Fresh Fruits</option>
+            <option value="fresh-vegetables">Fresh Vegetables</option>
+            <option value="grains">Grains</option>
+            <option value="legumes">Legumes</option>
+            <option value="meat-poultry">Meat & Poultry</option>
+            <option value="miscellaneous">Miscellaneous</option>
+            <option value="nuts-seeds">Nuts & Seeds</option>
+            <option value="oils-vinegars">Oils & Vinegars</option>
+            <option value="pasta">Pasta</option>
+            <option value="prepared-meals">Prepared Meals</option>
+            <option value="sauces">Sauces</option>
+            <option value="seafood">Seafood</option>
+            <option value="snacks">Snacks</option>
+            <option value="soups">Soups</option>
+            <option value="spices-herbs">Spices & Herbs</option>
+            <option value="specialty-items">Specialty Items</option>
+            <option value="sweeteners">Sweeteners</option>
+          </select>
+        </fieldset>
+        <input type="submit" value="Add!"/>
+      </form>
+    </article>
+    {% endif %}
+  </main>
+  <script>
+    function addItem(itemName, itemType) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = `/add/${itemName}/${itemType}`;
+      document.body.appendChild(form);
+      form.submit(function(e) {
+        e.preventDefault();
+    });
+    }
+
+    function deleteItem(itemName, itemType) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = `/delete/${itemName}/${itemType}`;
+      document.body.appendChild(form);
+      form.submit(function(e) {
+        e.preventDefault();
+    });
+    }
+  </script>
+</body>
+</html>
